@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>JOM BIJAK TATABAHASA</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:linear-gradient(135deg,#fff4c7,#dff5e5);
+    color:#17351f;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    padding:25px;
+}
+
+.card{
+    background:white;
+    border-radius:25px;
+    padding:25px;
+    margin:20px 0;
+    box-shadow:0 10px 30px rgba(0,0,0,0.12);
+}
+
+h1{
+    text-align:center;
+    font-size:45px;
+    margin:10px 0;
+}
+
+.subtitle{
+    text-align:center;
+    font-size:20px;
+    color:#55705c;
+}
+
+label{
+    font-weight:bold;
+    display:block;
+    margin-top:15px;
+}
+
+input,select,textarea{
+    width:100%;
+    padding:13px;
+    margin-top:7px;
+    border-radius:12px;
+    border:1px solid #ccd8ce;
+    font-size:16px;
+}
+
+button{
+    border:none;
+    border-radius:14px;
+    padding:13px 20px;
+    background:#2e7d45;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    transform:scale(1.03);
+}
+
+.secondary{
+    background:#e8f1e9;
+    color:#17351f;
+}
+
+.row{
+    display:flex;
+    gap:12px;
+    margin-top:18px;
+}
+
+.row button{
+    flex:1;
+}
+
+.hidden{
+    display:none;
+}
+
+.info{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+    font-weight:bold;
+}
+
+.question{
+    text-align:center;
+    font-size:30px;
+    font-weight:bold;
+    margin:35px 0;
+}
+
+.fruits{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+}
+
+.fruit{
+    height:160px;
+    background:white;
+    border:4px solid #e4eee5;
+    border-radius:25px;
+    font-size:65px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    transition:0.15s;
+}
+
+.fruit:hover{
+    transform:scale(1.05);
+}
+
+.answer{
+    font-size:18px;
+    margin-top:8px;
+}
+
+.feedback{
+    text-align:center;
+    font-size:21px;
+    font-weight:bold;
+    margin-top:25px;
+    min-height:35px;
+}
+
+.score{
+    font-size:40px;
+    font-weight:bold;
+    text-align:center;
+}
+
+.small{
+    font-size:14px;
+    color:#657269;
+}
+
+.question-item{
+    border-bottom:1px solid #ddd;
+    padding:15px 0;
+}
+
+.delete{
+    background:#b83b3b;
+    padding:7px 12px;
+    float:right;
+}
+
+@media(max-width:650px){
+
+    h1{
+        font-size:32px;
+    }
+
+    .fruits{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .fruit{
+        height:135px;
+        font-size:52px;
+    }
+
+    .row{
+        flex-direction:column;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+<!-- MENU UTAMA -->
+
+<div class="card" id="home">
+
+<h1>📚 JOM BIJAK TATABAHASA 🍎</h1>
+
+<p class="subtitle">
+Misi Potong Buah — Permainan Interaktif Bahasa Melayu
+</p>
+
+<label>👤 Nama Pemain</label>
+
+<input
+id="player"
+placeholder="Contoh: Aina"
+>
+
+
+<label>🔑 Room Code</label>
+
+<input
+id="room"
+value="INOVASI"
+placeholder="Contoh: INOVASI"
+>
+
+
+<div class="row">
+
+<button onclick="startGame()">
+🎮 MULA PERMAINAN
+</button>
+
+<button
+class="secondary"
+onclick="showTeacher()"
+>
+👩‍🏫 GURU / TETAPAN
+</button>
+
+</div>
+
+<p class="small">
+Pilih jawapan yang betul dengan memotong buah.
+</p>
+
+</div>
+
+
+
+<!-- GAME -->
+
+<div class="card hidden" id="game">
+
+<div class="info">
+
+<span>
+👤 <span id="playerName"></span>
+</span>
+
+<span>
+🔑 <span id="roomName"></span>
+</span>
+
+<span>
+⏱️ <span id="time">60</span>s
+</span>
+
+<span>
+🏆 <span id="score">0</span>
+</span>
+
+</div>
+
+
+<div
+class="question"
+id="question"
+>
+</div>
+
+
+<div
+class="fruits"
+id="fruits"
+>
+</div>
+
+
+<div
+class="feedback"
+id="feedback"
+>
+</div>
+
+</div>
+
+
+
+<!-- RESULT -->
+
+<div class="card hidden" id="result">
+
+<h2>🎉 PERMAINAN TAMAT!</h2>
+
+<div
+id="resultText"
+>
+</div>
+
+<div class="row">
+
+<button onclick="startGame()">
+🔄 MAIN LAGI
+</button>
+
+<button
+class="secondary"
+onclick="goHome()"
+>
+🏠 MENU UTAMA
+</button>
+
+</div>
+
+</div>
+
+
+
+<!-- GURU -->
+
+<div class="card hidden" id="teacher">
+
+<h2>👩‍🏫 TETAPAN GURU</h2>
+
+<p class="small">
+Guru boleh menambah soalan tatabahasa sendiri.
+</p>
+
+
+<label>Soalan</label>
+
+<textarea
+id="qtext"
+rows="3"
+placeholder="Contoh: Pilih kata kerja yang betul."
+></textarea>
+
+
+<label>Jawapan 1</label>
+
+<input id="a1">
+
+
+<label>Jawapan 2</label>
+
+<input id="a2">
+
+
+<label>Jawapan 3</label>
+
+<input id="a3">
+
+
+<label>Jawapan 4</label>
+
+<input id="a4">
+
+
+<label>Jawapan Betul</label>
+
+<select id="correct">
+
+<option value="0">
+Jawapan 1
+</option>
+
+<option value="1">
+Jawapan 2
+</option>
+
+<option value="2">
+Jawapan 3
+</option>
+
+<option value="3">
+Jawapan 4
+</option>
+
+</select>
+
+
+<div class="row">
+
+<button onclick="addQuestion()">
+➕ TAMBAH SOALAN
+</button>
+
+<button
+class="secondary"
+onclick="resetQuestions()"
+>
+🔄 SOALAN ASAL
+</button>
+
+<button
+class="secondary"
+onclick="goHome()"
+>
+🏠 KEMBALI
+</button>
+
+</div>
+
+
+<h3>📋 Senarai Soalan</h3>
+
+<div id="questionList">
+</div>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+
+/* =========================
+   SOALAN DEFAULT
+========================= */
+
+
+const defaultQuestions = [
+
+{
+q:"Pilih kata kerja yang betul.",
+a:[
+"cantik",
+"berlari",
+"sekolah",
+"merah"
+],
+c:1
+},
+
+{
+q:"Pilih kata adjektif yang betul.",
+a:[
+"makan",
+"cantik",
+"sekolah",
+"membaca"
+],
+c:1
+},
+
+{
+q:"Pilih kata nama yang betul.",
+a:[
+"meja",
+"berlari",
+"cantik",
+"membaca"
+],
+c:0
+},
+
+{
+q:"Apakah sinonim bagi perkataan 'gembira'?",
+a:[
+"sedih",
+"marah",
+"riang",
+"takut"
+],
+c:2
+},
+
+{
+q:"Apakah antonim bagi perkataan 'besar'?",
+a:[
+"tinggi",
+"kecil",
+"panjang",
+"luas"
+],
+c:1
+},
+
+{
+q:"Lengkapkan peribahasa: Bagai aur dengan ...",
+a:[
+"tebing",
+"batu",
+"air",
+"hujan"
+],
+c:0
+},
+
+{
+q:"Pilih ayat yang betul.",
+a:[
+"Ali sedang membaca buku.",
+"Ali sedang buku membaca.",
+"Ali membaca sedang buku.",
+"Ali buku sedang membaca."
+],
+c:0
+},
+
+{
+q:"Pilih kata ganti nama diri yang betul.",
+a:[
+"saya",
+"rumah",
+"cantik",
+"berlari"
+],
+c:0
+},
+
+{
+q:"Pilih penjodoh bilangan yang betul: se___ pisang.",
+a:[
+"biji",
+"sisir",
+"helai",
+"batang"
+],
+c:1
+},
+
+{
+q:"Pilih kata hubung yang sesuai: Ali belajar ___ Ahmad bermain.",
+a:[
+"dan",
+"kerana",
+"tetapi",
+"supaya"
+],
+c:2
+}
+
+];
+
+
+/* =========================
+   VARIABLES
+========================= */
+
+
+let questions =
+JSON.parse(
+localStorage.getItem("jbb_tatabahasa")
+|| "null"
+)
+|| defaultQuestions;
+
+
+let currentQuestion = 0;
+
+let score = 0;
+
+let time = 60;
+
+let timer = null;
+
+let locked = false;
+
+
+const fruits = [
+"🍎",
+"🍊",
+"🍉",
+"🍌"
+];
+
+
+/* =========================
+   BASIC FUNCTIONS
+========================= */
+
+
+function $(id){
+
+return document.getElementById(id);
+
+}
+
+
+function hideAll(){
+
+$("home").classList.add("hidden");
+
+$("game").classList.add("hidden");
+
+$("result").classList.add("hidden");
+
+$("teacher").classList.add("hidden");
+
+}
+
+
+function goHome(){
+
+clearInterval(timer);
+
+hideAll();
+
+$("home").classList.remove("hidden");
+
+}
+
+
+function showTeacher(){
+
+clearInterval(timer);
+
+hideAll();
+
+$("teacher").classList.remove("hidden");
+
+renderQuestions();
+
+}
+
+
+/* =========================
+   START GAME
+========================= */
+
+
+function startGame(){
+
+let player =
+$("player").value.trim()
+|| "Pemain";
+
+
+let room =
+$("room").value.trim().toUpperCase()
+|| "INOVASI";
+
+
+$("playerName").textContent =
+player;
+
+$("roomName").textContent =
+room;
+
+
+hideAll();
+
+$("game").classList.remove("hidden");
+
+
+currentQuestion = 0;
+
+score = 0;
+
+time = 60;
+
+locked = false;
+
+
+$("score").textContent =
+score;
+
+$("time").textContent =
+time;
+
+
+clearInterval(timer);
+
+
+timer = setInterval(function(){
+
+time--;
+
+$("time").textContent =
+time;
+
+
+if(time <= 0){
+
+endGame();
+
+}
+
+},1000);
+
+
+showQuestion();
+
+}
+
+
+/* =========================
+   SHOW QUESTION
+========================= */
+
+
+function showQuestion(){
+
+if(time <= 0){
+
+return;
+
+}
+
+
+if(currentQuestion >= questions.length){
+
+currentQuestion = 0;
+
+}
+
+
+locked = false;
+
+
+$("feedback").textContent =
+"";
+
+
+let q =
+questions[currentQuestion];
+
+
+$("question").textContent =
+q.q;
+
+
+let order =
+[0,1,2,3]
+.sort(
+()=>Math.random()-0.5
+);
+
+
+$("fruits").innerHTML =
+order.map(
+(answer,index)=>`
+
+<button
+class="fruit"
+onclick="chooseAnswer(${answer})"
+>
+
+${fruits[index]}
+
+<span class="answer">
+
+${escapeHTML(q.a[answer])}
+
+</span>
+
+</button>
+
+`
+).join("");
+
+}
+
+
+/* =========================
+   ANSWER
+========================= */
+
+
+function chooseAnswer(answer){
+
+if(locked){
+
+return;
+
+}
+
+
+locked = true;
+
+
+let q =
+questions[currentQuestion];
+
+
+if(answer === q.c){
+
+score += 10;
+
+$("feedback").textContent =
+"✅ Betul! +10 mata";
+
+}
+
+else{
+
+$("feedback").textContent =
+"❌ Kurang tepat! Jawapan betul: "
++
+q.a[q.c];
+
+}
+
+
+$("score").textContent =
+score;
+
+
+setTimeout(function(){
+
+currentQuestion++;
+
+showQuestion();
+
+},900);
+
+}
+
+
+/* =========================
+   END GAME
+========================= */
+
+
+function endGame(){
+
+clearInterval(timer);
+
+locked = true;
+
+hideAll();
+
+$("result").classList.remove("hidden");
+
+
+let message;
+
+
+if(score >= 70){
+
+message =
+"🏆 Hebat! Anda Bijak Tatabahasa!";
+
+}
+
+else if(score >= 40){
+
+message =
+"🌟 Bagus! Teruskan berlatih!";
+
+}
+
+else{
+
+message =
+"💪 Jangan berputus asa. Cuba lagi!";
+
+}
+
+
+$("resultText").innerHTML = `
+
+<p>
+👤 <b>Nama:</b>
+${escapeHTML($("playerName").textContent)}
+</p>
+
+<p>
+🔑 <b>Room:</b>
+${escapeHTML($("roomName").textContent)}
+</p>
+
+<div class="score">
+
+🏆 ${score} MATA
+
+</div>
+
+<h3 style="text-align:center">
+
+${message}
+
+</h3>
+
+`;
+
+}
+
+
+/* =========================
+   ADD QUESTION
+========================= */
+
+
+function addQuestion(){
+
+let q =
+$("qtext").value.trim();
+
+
+let answers = [
+
+$("a1").value.trim(),
+
+$("a2").value.trim(),
+
+$("a3").value.trim(),
+
+$("a4").value.trim()
+
+];
+
+
+let correct =
+Number($("correct").value);
+
+
+if(
+!q ||
+answers.some(
+x => !x
+)
+){
+
+alert(
+"Sila lengkapkan semua ruangan."
+);
+
+return;
+
+}
+
+
+questions.push({
+
+q:q,
+
+a:answers,
+
+c:correct
+
+});
+
+
+saveQuestions();
+
+
+$("qtext").value="";
+
+$("a1").value="";
+
+$("a2").value="";
+
+$("a3").value="";
+
+$("a4").value="";
+
+
+renderQuestions();
+
+
+alert(
+"Soalan berjaya ditambah! ✅"
+);
+
+}
+
+
+/* =========================
+   DELETE QUESTION
+========================= */
+
+
+function deleteQuestion(index){
+
+if(questions.length <= 1){
+
+alert(
+"Sekurang-kurangnya satu soalan diperlukan."
+);
+
+return;
+
+}
+
+
+questions.splice(index,1);
+
+saveQuestions();
+
+renderQuestions();
+
+}
+
+
+/* =========================
+   SAVE
+========================= */
+
+
+function saveQuestions(){
+
+localStorage.setItem(
+"jbb_tatabahasa",
+JSON.stringify(questions)
+);
+
+}
+
+
+/* =========================
+   RESET
+========================= */
+
+
+function resetQuestions(){
+
+if(
+confirm(
+"Pulihkan semua soalan asal?"
+)
+){
+
+questions =
+defaultQuestions.map(
+x => ({
+q:x.q,
+a:[...x.a],
+c:x.c
+})
+);
+
+saveQuestions();
+
+renderQuestions();
+
+}
+
+}
+
+
+/* =========================
+   QUESTION LIST
+========================= */
+
+
+function renderQuestions(){
+
+$("questionList").innerHTML =
+
+questions.map(
+
+(q,index)=>`
+
+<div class="question-item">
+
+<b>
+${index+1}. ${escapeHTML(q.q)}
+</b>
+
+<br><br>
+
+<span class="small">
+
+${q.a.map(
+
+(a,i)=>
+
+(i === q.c
+? "✅ "
+: "")
++
+(i+1)
++
+". "
++
+escapeHTML(a)
+
+).join("　")}
+
+</span>
+
+<button
+class="delete"
+onclick="deleteQuestion(${index})"
+>
+
+Padam
+
+</button>
+
+</div>
+
+`
+
+).join("");
+
+}
+
+
+/* =========================
+   SECURITY
+========================= */
+
+
+function escapeHTML(text){
+
+return String(text)
+.replace(
+/[&<>"']/g,
+function(char){
+
+return {
+
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#039;"
+
+}[char];
+
+}
+);
+
+}
+
+
+</script>
+
+</body>
+</html>
